@@ -1,8 +1,3 @@
-Date: 29/06/2020
-Author: Dionysis Ntreou
-Email: yakizarns1@gmail.com
-
-
 ####    Versions    ####
 
 Python: 3.6.5
