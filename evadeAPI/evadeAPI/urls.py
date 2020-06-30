@@ -7,6 +7,8 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from evader import views
+
 
 urlpatterns = [
     # Examples:
@@ -19,4 +21,5 @@ urlpatterns = [
 
     # enable the admin interface
     url(r'^admin/', admin.site.urls),
+    url('register', views.registration_view, name="register"),
 ]
