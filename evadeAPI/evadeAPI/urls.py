@@ -8,18 +8,16 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from evader import views
-
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     # Examples:
     # url(r'^blog/', include('blog.urls', namespace='blog')),
-
-    # provide the most basic login/logout functionality
-    url(r'^login/$', auth_views.LoginView.as_view(template_name='core/login.html'),
-        name='core_login'),
-    url(r'^logout/$', auth_views.LogoutView.as_view(), name='core_logout'),
-
+    
     # enable the admin interface
     url(r'^admin/', admin.site.urls),
-    url('register', views.registration_view, name="register"),
+
+    # User based routes
+    url('user/add', views.registration_view, name="register"),
+    url('user/login', obtain_auth_token, name="login"),
 ]

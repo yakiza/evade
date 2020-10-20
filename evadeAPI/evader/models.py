@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
-class evader_user_manager(BaseUserManager):
+class EvaderUserManager(BaseUserManager):
     def create_user(self, email, username, first_name, last_name, password=None):
         """
         Creates and saves a User with the given email,first name  and password.
@@ -14,6 +18,7 @@ class evader_user_manager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
         )
+        print("WHATT==============================")
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -34,7 +39,7 @@ class evader_user_manager(BaseUserManager):
         return user
 
 
-class evader_user(AbstractBaseUser):
+class EvaderUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -43,18 +48,19 @@ class evader_user(AbstractBaseUser):
             'unique': ("A user with that email already exists."),
         },
     )
+
     username =  models.CharField(max_length=60, help_text=('Required. 60 characters or fewer.'), default='')
     first_name = models.CharField(max_length=60, help_text=('Required. 60 characters or fewer.'), default='')
     last_name = models.CharField(max_length=60, help_text=('Required. 60 characters or fewer.'), default='')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    objects = evader_user_manager()
+    objects = EvaderUserManager()
 
     USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name','last_name']
     
-# 'username', 'first_name', 'last_name'
     def __str__(self):
         return self.email
     
@@ -73,4 +79,11 @@ class evader_user(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin    
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
 
