@@ -39,7 +39,6 @@ class Evader_user_manager(BaseUserManager):
 
 
 class Evader_user(AbstractBaseUser):
-    print("1")
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
