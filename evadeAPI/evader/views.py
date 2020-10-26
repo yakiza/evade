@@ -1,31 +1,30 @@
-from django.contrib.auth.models import User, Group
-from django.contrib.auth import authenticate, login
-from django.contrib.sessions.models import Session
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from evader.serializers import user_registration_serializer
+from evader.serializers import User_registration_serializer
 from rest_framework.authtoken.models import Token
 
 
 @api_view(['POST'])
 def registration_view(request):
     if request.method != 'POST':
-        raise Http404('Only POSTs are allowed')
+        return Response('Only POSTs are allowed')
     try:
-        responseData = {}
-        serializer = user_registration_serializer(data=request.data)  
+        print(request.data)
+        response_data = {}
+        serializer = User_registration_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            responseData['message'] = "succesfully created a new user."
-            responseData['email'] = user.email
-            responseData['username'] = user.username
+            response_data['message'] = 'succesfully created a new user.'
+            response_data['email'] = user.email
+            response_data['username'] = user.username
             token = Token.objects.get(user=user).key
-            responseData['token'] =  token
+            response_data['token'] =  token
             print("---------------->", token)
         else:
-            responseData = serializer.errors
-    except :
-        responseData = "Failure while serializing data"
+            print(serializer.errors)
+            response_data = serializer.errors
+    except:
+        response_data = 'Failure while serializing data'
 
-    return Response(responseData)
+    return Response(response_data)

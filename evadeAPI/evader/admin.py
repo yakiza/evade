@@ -5,5 +5,5 @@ from .models import *
 
 
 # Register your models here.
-admin.site.register(EvaderUser)
+admin.site.register(Evader_user)
 admin.site.unregister(Group)
